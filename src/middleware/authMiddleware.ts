@@ -25,4 +25,4 @@ async function authMiddleware(req: AuthRequestType, res: Response, next: NextFun
 
 }
 
-export default authMiddleware;
+export default authMiddleware
