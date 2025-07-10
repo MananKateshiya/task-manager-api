@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { JWTPayload, jwtVerify, SignJWT } from "jose";
+import { jwtVerify, JWTVerifyResult } from "jose";
 
 interface AuthRequestType extends Request {
-    user?: string | JWTPayload
+    user?: string | JWTVerifyResult
 }
 
 async function authMiddleware(req: AuthRequestType, res: Response, next: NextFunction) {
@@ -16,11 +16,13 @@ async function authMiddleware(req: AuthRequestType, res: Response, next: NextFun
     const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
 
     try {
-        const verified = jwtVerify(token, secret);
+        const verified = await jwtVerify(token, secret);
         req.user = verified;
-        next()
-    } catch (error) {
-
+        next();
+    } catch (error: any) {
+        res.status(401).json({ message: "Invalid Token", error: error.message })
     }
 
 }
+
+export default authMiddleware;
