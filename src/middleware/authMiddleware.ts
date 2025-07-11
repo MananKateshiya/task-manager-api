@@ -6,7 +6,7 @@ interface AuthRequestType extends Request {
 }
 
 async function authMiddleware(req: AuthRequestType, res: Response, next: NextFunction) {
-    const token = req.headers.authorization?.replace("Bearer ", "");
+    const token = req.headers.authorization?.split(" ")[1];
     console.log("Token", token);
 
     if (!token) {
